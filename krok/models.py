@@ -36,3 +36,14 @@ class Test(models.Model):
         default_related_name = "tests"
         ordering = ["-year"]
         indexes = (models.Index(fields=("step", "year"), name="step_year_idx"),)
+
+
+class Translation(models.Model):
+    text = models.TextField()
+
+
+class Question(models.Model):
+    text = models.CharField(max_length=500)
+    translation = models.OneToOneField(Translation, on_delete=models.SET_NULL, related_name="original")
+    test = models.ForeignKey(Test, on_delete=models.SET_NULL)
+    explanation = models.TextField(blank=True, default=None)
