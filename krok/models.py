@@ -24,7 +24,7 @@ class Profession(base_models.BaseNameClass):
 
 
 class Param(base_models.BaseNameClass):
-    pass
+    text = models.CharField(max_length=50)
 
 
 class Test(models.Model):
@@ -32,14 +32,13 @@ class Test(models.Model):
 
     profession = models.ForeignKey(Profession, on_delete=models.CASCADE)
     year = models.IntegerField(
-        validators=(validators.MinValueValidator(limit_value=2001)),
+        validators=(validators.MinValueValidator(limit_value=2001),)
     )
     step = models.IntegerField(choices=STEP)
     params = models.ManyToManyField(Param)
     english = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = (("profession", "year", "step", "params"),)
         default_related_name = "tests"
         ordering = ["-year"]
         indexes = (models.Index(fields=("step", "year"), name="step_year_idx"),)
