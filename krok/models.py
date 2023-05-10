@@ -1,7 +1,20 @@
+from django.contrib.auth.models import AbstractUser
 from django.core import validators, exceptions
 from django.db import models
 
 from . import base_models
+
+
+class User(AbstractUser):
+    email = models.EmailField()
+    profile_type = models.ForeignKey("ProfileType", on_delete=models.SET_DEFAULT, default=1)
+
+    def __str__(self):
+        return self.username
+
+
+class ProfileType(models.Model):
+    name = models.CharField(max_length=100)
 
 
 class Profession(base_models.BaseNameClass):
@@ -65,3 +78,5 @@ class Variant(models.Model):
 
 class VariantTranslation(base_models.BaseTranslation):
     variant = models.OneToOneField(Variant, on_delete=models.CASCADE)
+
+
