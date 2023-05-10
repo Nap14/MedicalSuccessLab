@@ -59,7 +59,10 @@ class Question(models.Model):
 
 
 class QuestionTranslation(base_models.BaseTranslation):
-    question = models.OneToOneField(Question, on_delete=models.CASCADE)
+    question = models.OneToOneField(Question, on_delete=models.CASCADE, related_name="translation")
+
+    class Meta:
+        db_table = "krok_question_translation"
 
 
 class Variant(models.Model):
@@ -80,7 +83,10 @@ class Variant(models.Model):
 
 
 class VariantTranslation(base_models.BaseTranslation):
-    variant = models.OneToOneField(Variant, on_delete=models.CASCADE)
+    variant = models.OneToOneField(Variant, on_delete=models.CASCADE, related_name="translation")
+
+    class Meta:
+        db_table = "krok_variant_translation"
 
 
 class TestAttempt(models.Model):
@@ -92,6 +98,9 @@ class TestAttempt(models.Model):
         decimal_places=2,
         max_digits=5,
     )
+
+    class Meta:
+        db_table = "krok_test_attempt"
 
 
 class Comment(models.Model):
