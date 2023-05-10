@@ -16,3 +16,4 @@ class BaseTranslation(models.Model):
 
     class Meta:
         default_related_name = "translation"
+        abstract = True
