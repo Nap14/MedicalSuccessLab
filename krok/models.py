@@ -2,16 +2,6 @@ from django.core import validators
 from django.db import models
 
 
-class BaseNameClass(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return self.name
-
-
 class Profession(BaseNameClass):
     pass
 
@@ -38,12 +28,12 @@ class Test(models.Model):
         indexes = (models.Index(fields=("step", "year"), name="step_year_idx"),)
 
 
-class Translation(models.Model):
-    text = models.TextField()
-
-
 class Question(models.Model):
     text = models.CharField(max_length=500)
-    translation = models.OneToOneField(Translation, on_delete=models.SET_NULL, related_name="original")
     test = models.ForeignKey(Test, on_delete=models.SET_NULL)
     explanation = models.TextField(blank=True, default=None)
+
+
+class QuestionTranslation(models.Model):
+    question = models.OneToOneField(Question, on_delete=models.CASCADE)
+
