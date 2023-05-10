@@ -30,10 +30,14 @@ class Test(models.Model):
         indexes = (models.Index(fields=("step", "year"), name="step_year_idx"),)
 
 
+class Explanation(models.Model):
+    text = models.CharField(max_length=500)
+
+
 class Question(models.Model):
     text = models.CharField(max_length=500)
     test = models.ForeignKey(Test, on_delete=models.SET_NULL)
-    explanation = models.TextField(blank=True, default=None)
+    explanation = models.ForeignKey(Explanation, on_delete=models.SET_NULL)
 
 
 class QuestionTranslation(base_models.BaseTranslation):
