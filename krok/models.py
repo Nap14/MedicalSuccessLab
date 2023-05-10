@@ -51,7 +51,9 @@ class Explanation(models.Model):
 
 class Question(models.Model):
     text = models.CharField(max_length=500)
-    test = models.ForeignKey(Test, on_delete=models.SET_NULL, related_name="questions", null=True)
+    test = models.ForeignKey(
+        Test, on_delete=models.SET_NULL, related_name="questions", null=True
+    )
     explanation = models.ForeignKey(
         Explanation, on_delete=models.SET_NULL, related_name="questions", null=True
     )
