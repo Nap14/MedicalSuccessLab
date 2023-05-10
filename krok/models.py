@@ -1,4 +1,4 @@
-from django.core import validators
+from django.core import validators, exceptions
 from django.db import models
 
 from . import base_models
@@ -39,3 +39,25 @@ class Question(models.Model):
 class QuestionTranslation(base_models.BaseTranslation):
     question = models.OneToOneField(Question, on_delete=models.CASCADE)
 
+
+class Variant(models.Model):
+    text = models.CharField(max_length=100)
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="variants"
+    )
+    is_correct = models.BooleanField()
+
+    def clean(self):
+        super(Variant, self).clean()
+        if self.is_correct and self.question.variants.filter(is_correct=True).exists():
+            raise exceptions.ValidationError("Only one variant can be correct")
+
+    def save(
+        self, *args, **kwargs
+    ):
+        self.full_clean()
+        super(Variant, self).save(*args, **kwargs)
+
+
+class VariantTranslation(base_models.BaseTranslation):
+    variant = models.OneToOneField(Variant, on_delete=models.CASCADE)
