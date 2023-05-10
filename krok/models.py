@@ -51,9 +51,9 @@ class Explanation(models.Model):
 
 class Question(models.Model):
     text = models.CharField(max_length=500)
-    test = models.ForeignKey(Test, on_delete=models.SET_NULL, related_name="questions")
+    test = models.ForeignKey(Test, on_delete=models.SET_NULL, related_name="questions", null=True)
     explanation = models.ForeignKey(
-        Explanation, on_delete=models.SET_NULL, related_name="questions"
+        Explanation, on_delete=models.SET_NULL, related_name="questions", null=True
     )
 
 
@@ -91,3 +91,14 @@ class TestAttempt(models.Model):
         decimal_places=2,
         max_digits=5,
     )
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    text = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    class Meta:
+        default_related_name = "comments"
+        ordering = ["-created_date"]
