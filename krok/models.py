@@ -49,8 +49,8 @@ class Explanation(models.Model):
 
 class Question(models.Model):
     text = models.CharField(max_length=500)
-    test = models.ForeignKey(Test, on_delete=models.SET_NULL)
-    explanation = models.ForeignKey(Explanation, on_delete=models.SET_NULL)
+    test = models.ForeignKey(Test, on_delete=models.SET_NULL, related_name="questions")
+    explanation = models.ForeignKey(Explanation, on_delete=models.SET_NULL, related_name="questions")
 
 
 class QuestionTranslation(base_models.BaseTranslation):
@@ -78,5 +78,3 @@ class Variant(models.Model):
 
 class VariantTranslation(base_models.BaseTranslation):
     variant = models.OneToOneField(Variant, on_delete=models.CASCADE)
-
-
