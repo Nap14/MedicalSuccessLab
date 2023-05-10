@@ -1,12 +1,14 @@
 from django.core import validators
 from django.db import models
 
+from . import base_models
 
-class Profession(BaseNameClass):
+
+class Profession(base_models.BaseNameClass):
     pass
 
 
-class Param(BaseNameClass):
+class Param(base_models.BaseNameClass):
     pass
 
 
@@ -34,6 +36,6 @@ class Question(models.Model):
     explanation = models.TextField(blank=True, default=None)
 
 
-class QuestionTranslation(models.Model):
+class QuestionTranslation(base_models.BaseTranslation):
     question = models.OneToOneField(Question, on_delete=models.CASCADE)
 
