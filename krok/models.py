@@ -7,7 +7,9 @@ from . import base_models
 
 class User(AbstractUser):
     email = models.EmailField()
-    profile_type = models.ForeignKey("ProfileType", on_delete=models.SET_DEFAULT, default=1)
+    profile_type = models.ForeignKey(
+        "ProfileType", on_delete=models.SET_DEFAULT, default=1
+    )
 
     def __str__(self):
         return self.username
@@ -50,7 +52,9 @@ class Explanation(models.Model):
 class Question(models.Model):
     text = models.CharField(max_length=500)
     test = models.ForeignKey(Test, on_delete=models.SET_NULL, related_name="questions")
-    explanation = models.ForeignKey(Explanation, on_delete=models.SET_NULL, related_name="questions")
+    explanation = models.ForeignKey(
+        Explanation, on_delete=models.SET_NULL, related_name="questions"
+    )
 
 
 class QuestionTranslation(base_models.BaseTranslation):
@@ -69,12 +73,21 @@ class Variant(models.Model):
         if self.is_correct and self.question.variants.filter(is_correct=True).exists():
             raise exceptions.ValidationError("Only one variant can be correct")
 
-    def save(
-        self, *args, **kwargs
-    ):
+    def save(self, *args, **kwargs):
         self.full_clean()
         super(Variant, self).save(*args, **kwargs)
 
 
 class VariantTranslation(base_models.BaseTranslation):
     variant = models.OneToOneField(Variant, on_delete=models.CASCADE)
+
+
+class TestAttempt(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="attempts")
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="attempts")
+    mistakes = models.ManyToManyField(Question)
+    result = models.DecimalField(
+        validators=(validators.MinValueValidator(0), validators.MaxValueValidator(100)),
+        decimal_places=2,
+        max_digits=5,
+    )
